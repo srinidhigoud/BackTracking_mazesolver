@@ -1,0 +1,51 @@
+import collections
+import random
+
+def generateMatrix():
+    matrices=[]
+    arr_of_ls=[3,4,5,6]
+    for l in arr_of_ls:
+        ma=[]
+        for i in range(l):
+            tmp=[]
+            for j in range(l):
+                tmp.append(random.randint(-5,15))
+            ma.append(tmp)
+        matrices.append(ma)
+    return matrices
+        
+def printMat(matrix):
+    for row in matrix:
+        print(row)
+    print("------")
+
+def getThisEl(matrix,i,j):
+    up = matrix[i-1][j] if i-1 >= 0 and matrix[i-1][j] < 0 else 0
+    down = matrix[i+1][j] if i+1 < len(matrix) and matrix[i+1][j] < 0 else 0
+    left = matrix[i][j-1] if j-1 >= 0 and matrix[i][j-1] < 0 else 0
+    right = matrix[i][j+1] if j+1 < len(matrix[0]) and matrix[i][j+1] < 0 else 0
+    
+    return up+down+left+right
+
+def travn4(i,j,matrix,listSoFar,sumSoFar,ret):
+    if 0 <= i < len(matrix) and 0 <= j < len(matrix[0]):
+        if matrix[i][j] >= 0:
+            sumSoFar += getThisEl(matrix,i,j)
+            if i == len(matrix)-1 and j == len(matrix[0])-1:
+                print(listSoFar)
+                ret[sumSoFar].append(listSoFar)
+            travn4(i+1,j,matrix,listSoFar+[matrix[i][j]],sumSoFar,ret)
+            travn4(i,j+1,matrix,listSoFar+[matrix[i][j]],sumSoFar,ret)
+            
+def ea1(matrix):
+    sumPathsN4 = collections.defaultdict(list)
+    travn4(0,0,matrix,[],0,sumPathsN4)
+    ret = reduce((lambda r,x:r+x),[sumPathsN4[key] for key in sorted(sumPathsN4)],[])
+    print(sumPathsN4)
+    return ret
+    
+
+for matrix in generateMatrix():
+    printMat(matrix)
+    print(ea1(matrix))
+    print("------")
